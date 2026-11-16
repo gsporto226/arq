@@ -6,11 +6,24 @@ environment:
 
 workspace:
   - packages/*
+  - apps/*
 
 dev_dependencies:
   melos: ^7.0.0
 
 dependency_overrides:
+  reef:
+    path: ../reef/packages/reef
+  reef_router:
+    path: ../reef/packages/reef_router
+  reef_utils:
+    path: ../reef/packages/reef_utils
+  formularium:
+    path: ../formularium/packages/formularium
+  formularium_localization:
+    path: ../formularium/packages/formularium_localization
+  task_graph:
+    path: ../task_graph
   reef_fp:
     path: ../reef/packages/reef_fp
   listenable_plus:

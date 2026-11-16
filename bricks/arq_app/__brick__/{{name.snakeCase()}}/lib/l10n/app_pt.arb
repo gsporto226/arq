@@ -1,0 +1,7 @@
+{
+  "@@locale": "pt",
+  "appTitle": "{{name.titleCase()}}",
+  "greetingDraftLabel": "Nova saudação",
+  "greetingSave": "Salvar",
+  "greetingUnavailable": "Saudação indisponível"
+}

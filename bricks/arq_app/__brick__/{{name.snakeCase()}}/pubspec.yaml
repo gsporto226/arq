@@ -1,0 +1,98 @@
+name: {{name.snakeCase()}}
+description: Template app built on reef (screens) and arq (use cases and data).
+publish_to: none
+version: 0.1.0+1
+environment:
+  sdk: ">=3.13.0"
+
+dependencies:
+  arq: ^0.1.0
+  arq_ai: ^0.1.0
+  arq_offline: ^0.1.0
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_riverpod: ^3.4.2
+  freezed_annotation: ^3.1.0
+  intl: any
+  json_annotation: ^4.12.0
+  listenable_plus: ^0.0.2
+  material_ui: ^1.1.0
+  reef: ^0.1.0
+  reef_fp: ^0.1.0
+  reef_router: ^0.1.0
+  riverpod_annotation: ^4.0.6
+  task_graph: ^0.1.0
+
+dev_dependencies:
+  dart_mcp: ^0.5.2
+  stream_channel: ^2.1.0
+  build_runner: ^2.16.0
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  freezed: ^4.0.1
+  json_serializable: ^6.14.1
+  riverpod_generator: ^4.0.8
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+dependency_overrides:
+  reef:
+    git:
+      url: https://github.com/gsporto226/reef.git
+      path: packages/reef
+      ref: main
+  reef_fp:
+    git:
+      url: https://github.com/gsporto226/reef.git
+      path: packages/reef_fp
+      ref: main
+  reef_router:
+    git:
+      url: https://github.com/gsporto226/reef.git
+      path: packages/reef_router
+      ref: main
+  reef_utils:
+    git:
+      url: https://github.com/gsporto226/reef.git
+      path: packages/reef_utils
+      ref: main
+  arq:
+    git:
+      url: https://github.com/gsporto226/arq.git
+      path: packages/arq
+      ref: main
+  arq_ai:
+    git:
+      url: https://github.com/gsporto226/arq.git
+      path: packages/arq_ai
+      ref: main
+  arq_offline:
+    git:
+      url: https://github.com/gsporto226/arq.git
+      path: packages/arq_offline
+      ref: main
+  listenable_plus:
+    git:
+      url: https://github.com/gsporto226/listenable_plus.git
+      path: .
+      ref: main
+  task_graph:
+    git:
+      url: https://github.com/gsporto226/task_graph.git
+      path: .
+      ref: main
+  formularium:
+    git:
+      url: https://github.com/gsporto226/formularium.git
+      path: packages/formularium
+      ref: intl-localization-migration
+  formularium_localization:
+    git:
+      url: https://github.com/gsporto226/formularium.git
+      path: packages/formularium_localization
+      ref: intl-localization-migration

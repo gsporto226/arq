@@ -185,6 +185,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.8"
+  cupertino_ui:
+    dependency: transitive
+    description:
+      name: cupertino_ui
+      sha256: c3eaf7f5bdfee36deb0b14a4cbf7602f1b6b8d8b8576b81f38fc08c25881c94c
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.7"
   dart_mcp:
     dependency: transitive
     description:
@@ -246,11 +254,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
+  flutter_localizations:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
+  flutter_riverpod:
+    dependency: transitive
+    description:
+      name: flutter_riverpod
+      sha256: "2ae1a93a868ae5f2d5358f521a4bfae0da7a3bfe77a60515ab5c28953b50557f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.5.0"
   flutter_test:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
+  formularium:
+    dependency: "direct overridden"
+    description:
+      path: "../formularium/packages/formularium"
+      relative: true
+    source: path
+    version: "0.1.0"
+  formularium_localization:
+    dependency: "direct overridden"
+    description:
+      path: "../formularium/packages/formularium_localization"
+      relative: true
+    source: path
+    version: "0.0.1"
   freezed:
     dependency: transitive
     description:
@@ -307,6 +342,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: "1ca20c894b1717686a2319b8548763d812bc0aabdac580420a44c5178c57a867"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.3"
   io:
     dependency: transitive
     description:
@@ -410,6 +453,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.0"
+  material_ui:
+    dependency: transitive
+    description:
+      name: material_ui
+      sha256: a6b19012df437a356cbc01f8ea22a105e07194c47c9a6009da0032a0ce35c4ab
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.11.1"
   melos:
     dependency: "direct dev"
     description:
@@ -522,6 +573,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.7.0"
+  reef:
+    dependency: "direct overridden"
+    description:
+      path: "../reef/packages/reef"
+      relative: true
+    source: path
+    version: "0.1.0"
   reef_fp:
     dependency: "direct overridden"
     description:
@@ -529,6 +587,52 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
+  reef_router:
+    dependency: "direct overridden"
+    description:
+      path: "../reef/packages/reef_router"
+      relative: true
+    source: path
+    version: "0.1.0"
+  reef_utils:
+    dependency: "direct overridden"
+    description:
+      path: "../reef/packages/reef_utils"
+      relative: true
+    source: path
+    version: "0.1.0"
+  riverpod:
+    dependency: transitive
+    description:
+      name: riverpod
+      sha256: "24cbce92e87088cae0dd06caac3876c0b3abfd084901e7a93a3254d6daf4937d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.5.0"
+  riverpod_analyzer_utils:
+    dependency: transitive
+    description:
+      name: riverpod_analyzer_utils
+      sha256: a9ac757dd927b8b52ee4d3c5f8b7ecba523e140a8df916a88d5d54fef5bff72f
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  riverpod_annotation:
+    dependency: transitive
+    description:
+      name: riverpod_annotation
+      sha256: "61baad25ae2164778032a4dd1fabf97372eb314bcd81fd2645ed9ec7fadb0208"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.8"
+  riverpod_generator:
+    dependency: transitive
+    description:
+      name: riverpod_generator
+      sha256: "3d5dc44c50452633ee700d8c31d680d80306dd19733c653b4117b9fc3e1d7399"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.10"
   shelf:
     dependency: transitive
     description:
@@ -582,6 +686,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.12.2"
+  state_notifier:
+    dependency: transitive
+    description:
+      name: state_notifier
+      sha256: b8677376aa54f2d7c58280d5a007f9e8774f1968d1fb1c096adcb4792fba29bb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   stream_channel:
     dependency: transitive
     description:
@@ -606,6 +718,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  task_graph:
+    dependency: "direct overridden"
+    description:
+      path: "../task_graph"
+      relative: true
+    source: path
+    version: "0.1.0"
   term_glyph:
     dependency: transitive
     description:
@@ -630,6 +749,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  uuid:
+    dependency: transitive
+    description:
+      name: uuid
+      sha256: "9b129329f58692f6e6578329498a8fe9fbe98f090beb764ffbb8ee2eadd01dcd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.6.0"
   vector_math:
     dependency: transitive
     description:
@@ -704,4 +831,4 @@ packages:
     version: "2.2.4"
 sdks:
   dart: ">=3.13.0 <4.0.0"
-  flutter: ">=3.18.0-18.0.pre.54"
+  flutter: ">=3.47.0"

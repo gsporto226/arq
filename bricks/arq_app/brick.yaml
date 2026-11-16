@@ -1,0 +1,17 @@
+name: arq_app
+description: A Flutter app on reef (screens) and arq (use cases over MCP, facades over N implementations).
+version: 0.1.0
+
+environment:
+  mason: ^0.1.0
+
+vars:
+  name:
+    type: string
+    description: App name in snake_case, e.g. cigestao.
+    prompt: App name?
+  org:
+    type: string
+    description: Reverse-domain organization for bundle ids.
+    default: br.com.conceito
+    prompt: Organization?
