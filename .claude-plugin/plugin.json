@@ -1,0 +1,5 @@
+{
+  "name": "arq",
+  "description": "Skills for the app layers below the viewmodel: use cases with MCP (arq_ai) and data access over facades (arq_offline).",
+  "version": "0.1.0"
+}

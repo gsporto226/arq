@@ -1,0 +1,16 @@
+# Dart/Flutter
+.dart_tool/
+.packages
+build/
+pubspec_overrides.yaml
+
+# FVM Version Cache
+.fvm/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Coverage output (tool/coverage.dart)
+coverage/

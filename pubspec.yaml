@@ -1,0 +1,20 @@
+name: arq_workspace
+publish_to: none
+
+environment:
+  sdk: ">=3.13.0"
+
+workspace:
+  - packages/*
+
+dev_dependencies:
+  melos: ^7.0.0
+
+dependency_overrides:
+  reef_fp:
+    path: ../reef/packages/reef_fp
+  listenable_plus:
+    path: ../listenable_plus
+
+melos:
+  repository: https://github.com/gsporto226/arq

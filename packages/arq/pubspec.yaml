@@ -1,0 +1,18 @@
+name: arq
+description: Shared primitives of the arq packages.
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ">=3.13.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  reef_fp: ^0.1.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter

@@ -1,0 +1,5 @@
+{
+  "name": "arq",
+  "owner": { "name": "gsporto226" },
+  "plugins": [{ "name": "arq", "source": "./", "description": "Skills for building app layers on arq." }]
+}
