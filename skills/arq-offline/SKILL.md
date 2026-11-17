@@ -1,81 +1,98 @@
 ---
 name: arq-offline
-description: How an app built on arq reaches its data — services, availability and facades over N implementations (online, offline, cache). Use when adding an endpoint, a service, offline support or a data source.
+description: How an app built on arq reaches its data — availability and facades over N implementations (online, offline, cache). Use when adding an endpoint, offline support, a data source or an unavailability reason.
 ---
 
 # Data access with arq_offline
 
 ```
-Use case → Repository → Service → Availability → Facade → implementations (online, offline, …)
+Use case → Repository (port) → adapter: Availability → Facade → implementations (online, offline, …)
 ```
 
-Done when every layer returns the shapes below and has a unit test with a
-fake for the layer under it.
+Done when each layer returns the shapes below and has a unit test with a fake
+for the layer under it.
 
 ## Return shapes
 
-Every layer from repository down follows one rule:
-
-| Kind | Returns |
-|---|---|
-| Action (writes, side effects) | `Future<Result<E, T>>` |
-| Get (may emit more than once) | `ValueListenable<Async<Result<E, T>>>` |
-| Get, single use | `Future<Result<E, T>>` named `<get>Once`, via `once()` from `arq` |
+| Layer | Action | Get |
+|---|---|---|
+| Facade and implementations | `Future<Result<E, T>>` | `ValueListenable<Async<Result<E, T>>>` |
+| Availability | `ValueListenable<Either<R, F>>` | `ValueListenable<Async<Outcome<R, E, T>>>` |
+| Repository and use case | `Future<Outcome<R, E, T>>` | `ValueListenable<Async<Outcome<R, E, T>>>` |
 
 Streams stay out of every signature.
 
 ## Facade
 
-One facade per backend feature. It holds N implementations of the same
-contract and decides how to combine them; the two strategies ready in
-`arq_offline` order them by priority:
+One facade per backend feature. It holds N implementations and decides how
+to combine them; the facade never sees the reason.
 
 ```dart
 class NoteFacade {
-  NoteFacade({this.online, this.offline});
+  NoteFacade(NoteBundle b) : _online = b.online, _offline = b.offline;
 
-  final NoteClient? online;
-  final NoteClient? offline;
+  final NoteClient? _online;
+  final NoteClient? _offline;
 
-  Future<Result<NoteError, Note>> add(String text) =>
-      fallback([?online, ?offline].map((c) => () => c.add(text)), none: const NoteError.unavailable());
+  Future<Result<NoteError, NoteId>> add(String text) =>
+      fallback([?_online, ?_offline].map((c) => () => c.add(text)), none: const NoteError.unavailable());
 
   ValueListenable<Async<Result<NoteError, NoteList>>> watch(String filter) =>
-      prioritize([?online, ?offline].map((c) => c.watch(filter)).toList(), none: const NoteError.unavailable());
+      prioritize([?_online, ?_offline].map((c) => c.watch(filter)).toList(), none: const NoteError.unavailable());
 }
 ```
 
 - `fallback` tries actions in order until one succeeds; all fail → first error.
-- `prioritize` follows gets at once: the highest-priority success wins, a
-  lower one shows while higher ones load, errors wait for every source.
-- A facade that needs another rule writes it; these two are defaults.
+- `prioritize` follows gets at once: the highest-priority success wins.
+
+## Reason
+
+Why a call cannot run now: a code plus a JSON payload, never free text. One
+freezed union per app state:
+
+```dart
+@Freezed(unionKey: 'code', unionValueCase: FreezedUnionCase.snake)
+sealed class AppUnavailable with _$AppUnavailable implements Reason {
+  const factory AppUnavailable.offline() = Offline;
+  const factory AppUnavailable.signedOut() = SignedOut;
+  factory AppUnavailable.fromJson(Map<String, dynamic> json) => _$AppUnavailableFromJson(json);
+}
+```
+
+`code` and `payload` come from `toJson`; the UI turns a reason into text
+with an exhaustive `switch`.
 
 ## Availability
 
-Tells whether the facade can run right now and why not. It decides a bundle
-(the implementations that exist) from app state and rebuilds the facade only
-when the bundle changes, so the bundle needs value equality (`@freezed` or a
-record).
+Decides from reactive app state whether the facade can run and, if not, why.
+The facade is rebuilt only when the decided bundle changes, so the bundle
+needs value equality.
 
 ```dart
-final notes = Availability<NoteFacade, NoteBundle, AppState, Unavailable>(
-  state: appState,
-  decide: (s) => s.session == null ? const Left(Unavailable.signedOut) : Right(NoteBundle(online: s.online, offline: s.offline)),
-  facade: (b) => NoteFacade(online: b.online, offline: b.offline),
-);
+class NoteAvailability extends Availability<NoteFacade, NoteBundle, AppClients, AppUnavailable> {
+  NoteAvailability(ValueListenable<AppClients> state)
+    : super(state: state, decide: ClientDeciders.any, facade: NoteFacade.new);
+
+  late final $add = method((f) => f.add);
+  late final $sync = method((f) => f.sync, decide: ClientDeciders.online);
+  ValueListenable<Async<AppOutcome<NoteError, NoteList>>> watch(String filter) => super.watch((f) => f.watch(filter));
+}
 ```
 
-Use `call` for actions, `watch` for gets, `once` for a single read. Each takes
-`unavailable:` to turn the reason into the service's error type.
+- `method` gives `Either<R, F>` with `F` typed: a caller gets the function
+  only after handling the reason.
+- `watch` gives a get as `Async<Outcome>`, `Blocked` while unavailable.
+- `decide:` overrides the default decider for one method.
 
-## Service and repository
+A caller of `method`:
 
-- A **service** wraps one availability: one method per facade method, mapping
-  the reason with `unavailable:`.
-- A **repository** gives the domain view of one aggregate: combines services,
-  maps transport data to domain types, owns caches as `ValueNotifier`s.
+```dart
+switch (_availability.$add.value) {
+  Left(:final value) => Blocked(value),
+  Right(value: final add) => Outcome.of(await add(text)),
+};
+```
 
 ## Providers
 
-Facades, availabilities, services and repositories are `keepAlive` riverpod
-providers.
+Availabilities and repositories are `keepAlive` riverpod providers.
