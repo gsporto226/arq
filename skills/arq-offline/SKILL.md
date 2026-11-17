@@ -29,7 +29,7 @@ to combine them; the facade never sees the reason.
 
 ```dart
 class NoteFacade {
-  NoteFacade(NoteBundle b) : _online = b.online, _offline = b.offline;
+  NoteFacade(ClientsBundle b) : _online = b.online, _offline = b.offline;
 
   final NoteClient? _online;
   final NoteClient? _offline;
@@ -65,11 +65,14 @@ with an exhaustive `switch`.
 ## Availability
 
 Decides from reactive app state whether the facade can run and, if not, why.
-The facade is rebuilt only when the decided bundle changes, so the bundle
-needs value equality.
+The state is one per app (`core/clients/app_clients.dart`: network plus the
+clients), shared by every availability, like ciapp's `AuthGuardState`. Each
+`method` and `watch` builds its own facade and rebuilds it only when the
+decided bundle changes, so the bundle compares its clients by identity, like
+ciapp's `AuthBundle`.
 
 ```dart
-class NoteAvailability extends Availability<NoteFacade, NoteBundle, AppClients, AppUnavailable> {
+class NoteAvailability extends Availability<NoteFacade, ClientsBundle, AppClients, AppUnavailable> {
   NoteAvailability(ValueListenable<AppClients> state)
     : super(state: state, decide: ClientDeciders.any, facade: NoteFacade.new);
 

@@ -1,5 +1,6 @@
-import 'package:{{name.snakeCase()}}/modules/greeting/greeting_providers.dart';
-import 'package:{{name.snakeCase()}}/modules/greeting/infrastructure/greeting_client.dart';
+import 'package:{{name.snakeCase()}}/core/clients/app_clients.dart';
+import 'package:{{name.snakeCase()}}/core/clients/clients_providers.dart';
+import 'package:{{name.snakeCase()}}/core/clients/greeting_client.dart';
 import 'package:{{name.snakeCase()}}/tools.dart';
 import 'package:arq_ai/arq_ai.dart';
 import 'package:dart_mcp/client.dart' hide Result;
@@ -9,13 +10,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:stream_channel/stream_channel.dart';
 
 void main() {
-  late ValueNotifier<GreetingClients> clients;
+  late ValueNotifier<AppClients> clients;
   late ProviderContainer container;
   late ServerConnection server;
 
   setUp(() async {
-    clients = ValueNotifier((clients: [MemoryGreetingClient('Olá!')], online: true));
-    container = ProviderContainer(overrides: [greetingClientsProvider.overrideWithValue(clients)]);
+    clients = ValueNotifier((online: true, onlineClient: MemoryGreetingClient('Olá!'), offlineClient: null));
+    container = ProviderContainer(overrides: [appClientsProvider.overrideWithValue(clients)]);
     final channel = StreamChannelController<String>();
     ArqMcpServer(
       channel.foreign,
@@ -62,7 +63,7 @@ void main() {
   });
 
   test('offline the call is unavailable with a code', () async {
-    clients.value = (clients: [MemoryGreetingClient('Olá!')], online: false);
+    clients.value = (online: false, onlineClient: clients.value.onlineClient, offlineClient: null);
     final result = await server.callTool(CallToolRequest(name: 'set_greeting', arguments: {'text': 'Oi'}));
     expect(result.isError, true);
     expect(text(result), '{"unavailable":{"code":"offline","payload":{}}}');

@@ -9,55 +9,6 @@ part of 'greeting_providers.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(greetingClients)
-final greetingClientsProvider = GreetingClientsProvider._();
-
-final class GreetingClientsProvider
-    extends
-        $FunctionalProvider<
-          ValueListenable<GreetingClients>,
-          ValueListenable<GreetingClients>,
-          ValueListenable<GreetingClients>
-        >
-    with $Provider<ValueListenable<GreetingClients>> {
-  GreetingClientsProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'greetingClientsProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$greetingClientsHash();
-
-  @$internal
-  @override
-  $ProviderElement<ValueListenable<GreetingClients>> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  ValueListenable<GreetingClients> create(Ref ref) {
-    return greetingClients(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ValueListenable<GreetingClients> value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<ValueListenable<GreetingClients>>(
-        value,
-      ),
-    );
-  }
-}
-
-String _$greetingClientsHash() => r'40cfc2509a07e151fee0357c99ec17e7dbcfb299';
-
 @ProviderFor(greetingRepository)
 final greetingRepositoryProvider = GreetingRepositoryProvider._();
 
@@ -104,7 +55,7 @@ final class GreetingRepositoryProvider
 }
 
 String _$greetingRepositoryHash() =>
-    r'78071181311f06f5e69423ea979bfb587edcd7d5';
+    r'c76c3cdcdf464e6a4cbb39654db6ffd2f14adecd';
 
 @ProviderFor(setGreetingCommand)
 final setGreetingCommandProvider = SetGreetingCommandProvider._();

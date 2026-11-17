@@ -13,6 +13,7 @@ every dependency pointing inward and the domain carries its own rules.
 ```text
 lib/
   core/                         # AppUnavailable, aliases, NoInput
+    clients/                    # app state (network + clients), bundle, deciders
   modules/<context>/            # one bounded context
     domain/                     # aggregates, value objects, errors
     application/

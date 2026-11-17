@@ -3,8 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:reef_fp/async.dart';
 import 'package:reef_fp/result.dart';
 
-typedef GreetingClients = ({List<GreetingClient> clients, bool online});
-
 abstract interface class GreetingClient {
   ValueListenable<Async<Result<GreetingError, Greeting>>> watch();
 

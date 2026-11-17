@@ -1,8 +1,9 @@
 import 'package:{{name.snakeCase()}}/core/app_types.dart';
 import 'package:{{name.snakeCase()}}/core/app_unavailable.dart';
 import 'package:{{name.snakeCase()}}/modules/greeting/domain/greeting.dart';
-import 'package:{{name.snakeCase()}}/modules/greeting/greeting_providers.dart';
-import 'package:{{name.snakeCase()}}/modules/greeting/infrastructure/greeting_client.dart';
+import 'package:{{name.snakeCase()}}/core/clients/app_clients.dart';
+import 'package:{{name.snakeCase()}}/core/clients/clients_providers.dart';
+import 'package:{{name.snakeCase()}}/core/clients/greeting_client.dart';
 import 'package:{{name.snakeCase()}}/modules/greeting/presentation/home/home_model.dart';
 import 'package:{{name.snakeCase()}}/modules/greeting/presentation/home/home_provider.dart';
 import 'package:{{name.snakeCase()}}/modules/greeting/presentation/home/home_viewmodel.dart';
@@ -14,8 +15,8 @@ import 'package:reef/reef.dart';
 import 'package:reef_fp/async.dart';
 import 'package:reef_fp/unit.dart';
 
-ProviderContainer containerWith(List<GreetingClient> clients) => ProviderContainer(
-  overrides: [greetingClientsProvider.overrideWithValue(ValueNotifier<GreetingClients>((clients: clients, online: true)))],
+ProviderContainer containerWith(GreetingClient? client) => ProviderContainer(
+  overrides: [appClientsProvider.overrideWithValue(ValueNotifier<AppClients>((online: true, onlineClient: client, offlineClient: null)))],
 );
 
 void main() {
@@ -23,7 +24,7 @@ void main() {
   late HomeViewModel vm;
 
   setUp(() {
-    container = containerWith([MemoryGreetingClient('Olá!')]);
+    container = containerWith(MemoryGreetingClient('Olá!'));
     vm = container.read(homeViewModelProvider(bufferId: BufferId.manual('home')));
   });
 
@@ -57,7 +58,7 @@ void main() {
   });
 
   test('with no clients the greeting is blocked with a reason', () async {
-    final empty = containerWith([]);
+    final empty = containerWith(null);
     addTearDown(empty.dispose);
     final vm = empty.read(homeViewModelProvider(bufferId: BufferId.manual('home')));
     expect(vm.$greeting.value, const Async<AppOutcome<GreetingError, Greeting>>.ready(Blocked(AppUnavailable.noClients())));

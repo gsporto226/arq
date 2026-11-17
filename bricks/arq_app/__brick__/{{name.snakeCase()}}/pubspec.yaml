@@ -2,6 +2,8 @@ name: {{name.snakeCase()}}
 description: Template app built on reef (screens) and arq (use cases and data).
 publish_to: none
 version: 0.1.0+1
+resolution: workspace
+
 environment:
   sdk: ">=3.13.0"
 

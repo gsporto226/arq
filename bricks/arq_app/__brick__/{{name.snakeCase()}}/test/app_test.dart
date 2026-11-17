@@ -1,6 +1,7 @@
 import 'package:{{name.snakeCase()}}/app.dart';
-import 'package:{{name.snakeCase()}}/modules/greeting/infrastructure/greeting_client.dart';
-import 'package:{{name.snakeCase()}}/modules/greeting/greeting_providers.dart';
+import 'package:{{name.snakeCase()}}/core/clients/app_clients.dart';
+import 'package:{{name.snakeCase()}}/core/clients/clients_providers.dart';
+import 'package:{{name.snakeCase()}}/core/clients/greeting_client.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -10,7 +11,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          greetingClientsProvider.overrideWithValue(ValueNotifier<GreetingClients>((clients: [MemoryGreetingClient('Olá!')], online: true))),
+          appClientsProvider.overrideWithValue(ValueNotifier<AppClients>((online: true, onlineClient: MemoryGreetingClient('Olá!'), offlineClient: null))),
         ],
         child: const App(),
       ),
