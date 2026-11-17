@@ -12,8 +12,9 @@ typedef AvailabilityDecider<Bundle, State, R extends Reason> = Either<R, Bundle>
 /// Tells whether a [Facade]'s methods can run right now and, if not, why.
 ///
 /// [decide] is the default decider; each [method] and [watch] may pass its
-/// own. Calls with the same decider share one facade. The [Bundle] must have
-/// value equality: the facade is rebuilt only when the decided bundle changes.
+/// own. Each one builds its own facade, as ciapp's guards build a mediator
+/// per method guard; the facade is rebuilt only when that decided bundle
+/// changes, so the [Bundle] needs equality (by identity of its clients).
 class Availability<Facade, Bundle, State, R extends Reason> {
   Availability({
     required ValueListenable<State> state,
@@ -27,12 +28,8 @@ class Availability<Facade, Bundle, State, R extends Reason> {
   final AvailabilityDecider<Bundle, State, R> _decide;
   final Facade Function(Bundle bundle) _facade;
 
-  final _facades = <AvailabilityDecider<Bundle, State, R>?, ValueListenable<Either<R, Facade>>>{};
-
-  ValueListenable<Either<R, Facade>> _facadeFor(AvailabilityDecider<Bundle, State, R>? decide) => _facades.putIfAbsent(
-    decide,
-    () => _state.map(decide ?? _decide).distinct().map((decided) => decided.mapRight(_facade)),
-  );
+  ValueListenable<Either<R, Facade>> _facadeFor(AvailabilityDecider<Bundle, State, R>? decide) =>
+      _state.map(decide ?? _decide).distinct().map((decided) => decided.mapRight(_facade));
 
   /// A facade function, reachable only through `Right`: a caller handles the
   /// reason before it can call [pick]'s result.
