@@ -77,6 +77,15 @@ void main() {
     expect(watched.value, const Async<Outcome<Unavailable, String, String>>.ready(Failed('e')));
   });
 
+  test('methods and watches with the same decider share one facade', () {
+    final echo = availability.method((f) => f.echo);
+    final watched = availability.watch((f) => f.value);
+    client.value = 'a';
+    echo.value;
+    watched.value;
+    expect(built, hasLength(1));
+  });
+
   test('rebuilds the facade only when the bundle changes', () {
     availability.watch((f) => f.value);
     client.value = 'a';
