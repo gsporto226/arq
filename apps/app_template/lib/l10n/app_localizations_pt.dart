@@ -16,8 +16,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get greetingDraftLabel => 'Nova saudação';
 
   @override
+  String get greetingEmpty => 'Digite uma saudação';
+
+  @override
   String get greetingSave => 'Salvar';
 
   @override
   String get greetingUnavailable => 'Saudação indisponível';
+
+  @override
+  String get unavailableOffline => 'Sem conexão';
+
+  @override
+  String get unavailableNoClients => 'Nenhuma fonte de saudação disponível';
 }

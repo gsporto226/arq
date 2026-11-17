@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:arq/arq.dart';
 import 'package:dart_mcp/server.dart' hide Result;
+import 'package:reef_fp/unit.dart';
 
 /// A command or query exposed to agents as an MCP tool.
 ///
@@ -61,7 +62,7 @@ final class McpTool {
     final outcome = await invoke(input);
     try {
       return switch (outcome) {
-        Done(:final value) => CallToolResult(content: [TextContent(text: jsonEncode(value))]),
+        Done(:final value) => CallToolResult(content: [TextContent(text: jsonEncode(value is Unit ? const {} : value))]),
         Failed(:final error) => _error({'error': error}),
         Blocked(:final reason) => _error({
           'unavailable': {'code': reason.code, 'payload': reason.payload},

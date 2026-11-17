@@ -2,6 +2,9 @@
   "@@locale": "pt",
   "appTitle": "App Template",
   "greetingDraftLabel": "Nova saudação",
+  "greetingEmpty": "Digite uma saudação",
   "greetingSave": "Salvar",
-  "greetingUnavailable": "Saudação indisponível"
+  "greetingUnavailable": "Saudação indisponível",
+  "unavailableOffline": "Sem conexão",
+  "unavailableNoClients": "Nenhuma fonte de saudação disponível"
 }

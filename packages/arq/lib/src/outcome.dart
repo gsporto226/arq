@@ -9,7 +9,9 @@ abstract interface class Reason {
 }
 
 extension ReasonFields on Reason {
-  String get code => toJson()['code'] as String;
+  String get code =>
+      toJson()['code'] as String? ??
+      (throw StateError('$runtimeType has no "code" in toJson: a freezed Reason union needs unionKey "code" and at least two variants'));
 
   Map<String, dynamic> get payload => toJson()..remove('code');
 }

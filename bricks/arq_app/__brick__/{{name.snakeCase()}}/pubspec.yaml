@@ -9,6 +9,7 @@ dependencies:
   arq: ^0.1.0
   arq_ai: ^0.1.0
   arq_offline: ^0.1.0
+  arq_widgets: ^0.1.0
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -75,6 +76,11 @@ dependency_overrides:
     git:
       url: https://github.com/gsporto226/arq.git
       path: packages/arq_offline
+      ref: main
+  arq_widgets:
+    git:
+      url: https://github.com/gsporto226/arq.git
+      path: packages/arq_widgets
       ref: main
   listenable_plus:
     git:
