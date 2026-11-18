@@ -23,6 +23,7 @@ const gitPackages = {
   'arq': ('arq', 'packages/arq', 'main'),
   'arq_ai': ('arq', 'packages/arq_ai', 'main'),
   'arq_offline': ('arq', 'packages/arq_offline', 'main'),
+  'arq_widgets': ('arq', 'packages/arq_widgets', 'main'),
   'listenable_plus': ('listenable_plus', '.', 'main'),
   'task_graph': ('task_graph', '.', 'main'),
   'formularium': ('formularium', 'packages/formularium', 'intl-localization-migration'),

@@ -1,8 +1,7 @@
-import 'package:arq_ai/arq_ai.dart';
+import 'package:arq/arq.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:reef_fp/async.dart';
-import 'package:reef_fp/result.dart';
 
 part 'fixtures.freezed.dart';
 part 'fixtures.g.dart';
@@ -34,21 +33,27 @@ abstract class Empty with _$Empty {
   static const schema = _$_EmptyJsonSchema;
 }
 
-class AddCommand extends Command<AddInput, Sum, String> {
-  AddCommand()
-    : super(name: 'add', description: 'Adds two numbers.', inputSchema: AddInput.schema, decodeInput: AddInput.fromJson);
+class Offline implements Reason {
+  const Offline();
 
   @override
-  Future<Result<String, Sum>> call(AddInput input) async =>
-      input.a < 0 ? const Err('negative') : Ok(Sum(sum: input.a + input.b));
+  Map<String, dynamic> toJson() => {'code': 'offline'};
 }
 
-class GreetingQuery extends Query<Empty, String, String> {
-  GreetingQuery()
-    : super(name: 'greeting', description: 'Reads the greeting.', inputSchema: Empty.schema, decodeInput: Empty.fromJson);
-
-  final state = ValueNotifier<Async<Result<String, String>>>(const Async.pending());
+class AddCommand implements Command<AddInput, Sum, String, Offline> {
+  bool online = true;
 
   @override
-  ValueListenable<Async<Result<String, String>>> call(Empty input) => state;
+  Future<Outcome<Offline, String, Sum>> call(AddInput input) async => switch ((online, input.a < 0)) {
+    (false, _) => const Blocked(Offline()),
+    (_, true) => const Failed('negative'),
+    _ => Done(Sum(sum: input.a + input.b)),
+  };
+}
+
+class GreetingQuery implements Query<Empty, String, String, Offline> {
+  final state = ValueNotifier<Async<Outcome<Offline, String, String>>>(const Async.pending());
+
+  @override
+  ValueListenable<Async<Outcome<Offline, String, String>>> call(Empty input) => state;
 }

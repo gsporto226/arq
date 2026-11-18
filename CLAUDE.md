@@ -2,9 +2,10 @@
 
 App architecture below the reef viewmodel, split like reef:
 
-- `packages/arq`: shared primitives (`once`).
-- `packages/arq_ai`: commands and queries, exposed as MCP tools.
+- `packages/arq`: `Outcome`, `Reason`, `Command`/`Query` and `once`.
+- `packages/arq_ai`: `McpTool` and `ArqMcpServer`, putting use cases in front of agents.
 - `packages/arq_offline`: availability and facades over N implementations.
+- `packages/arq_widgets`: widgets for outcomes (only `flutter/widgets`).
 
 `apps/app_template` is the reference app: every layer of reef and arq in one
 feature. `bricks/arq_app` is generated from it; after changing the app, run

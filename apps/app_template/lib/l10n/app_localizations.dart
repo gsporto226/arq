@@ -106,6 +106,12 @@ abstract class AppLocalizations {
   /// **'Nova saudação'**
   String get greetingDraftLabel;
 
+  /// No description provided for @greetingEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite uma saudação'**
+  String get greetingEmpty;
+
   /// No description provided for @greetingSave.
   ///
   /// In pt, this message translates to:
@@ -117,6 +123,18 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Saudação indisponível'**
   String get greetingUnavailable;
+
+  /// No description provided for @unavailableOffline.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem conexão'**
+  String get unavailableOffline;
+
+  /// No description provided for @unavailableNoClients.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma fonte de saudação disponível'**
+  String get unavailableNoClients;
 }
 
 class _AppLocalizationsDelegate

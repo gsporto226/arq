@@ -1,6 +1,7 @@
 import 'package:{{name.snakeCase()}}/app.dart';
-import 'package:{{name.snakeCase()}}/features/greeting/_facades/greeting_client.dart';
-import 'package:{{name.snakeCase()}}/features/greeting/_providers/greeting_providers.dart';
+import 'package:{{name.snakeCase()}}/core/clients/app_clients.dart';
+import 'package:{{name.snakeCase()}}/core/clients/clients_providers.dart';
+import 'package:{{name.snakeCase()}}/core/clients/greeting_client.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -9,18 +10,18 @@ import 'package:task_graph/task_graph.dart';
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final greetingClients = FunctionTask<ValueListenable<List<GreetingClient>>>(
-    name: 'greeting_clients',
-    function: () => ValueNotifier([MemoryGreetingClient('Olá!')]),
+  final appClients = FunctionTask<ValueListenable<AppClients>>(
+    name: 'app_clients',
+    function: () => ValueNotifier<AppClients>((online: true, onlineClient: MemoryGreetingClient('Olá!'), offlineClient: null)),
   );
-  final graph = TaskGraph()..add(greetingClients);
+  final graph = TaskGraph()..add(appClients);
 
   final result = await TaskRunner.run(graph);
   if (!result.succeeded) throw StateError(result.summary());
 
   runApp(
     ProviderScope(
-      overrides: [greetingClientsProvider.overrideWithValue(await greetingClients.value)],
+      overrides: [appClientsProvider.overrideWithValue(await appClients.value)],
       child: const App(),
     ),
   );

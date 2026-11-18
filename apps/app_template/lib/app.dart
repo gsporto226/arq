@@ -1,4 +1,4 @@
-import 'package:app_template/features/greeting/_presentation/home/home_page.dart';
+import 'package:app_template/modules/greeting/presentation/home/home_page.dart';
 import 'package:app_template/l10n/app_localizations.dart';
 import 'package:app_template/links.dart';
 import 'package:material_ui/material_ui.dart';

@@ -1,81 +1,80 @@
 ---
 name: arq-ai
-description: How to write commands and queries with arq_ai so an agent can call them over MCP. Use when adding or changing a use case, its input or output, or the app's MCP tools.
+description: How to write commands and queries with arq and expose them to agents as MCP tools with arq_ai. Use when adding or changing a use case, its input or output, or the app's MCP tools.
 ---
 
-# Use cases with arq_ai
+# Use cases and MCP tools
 
-Every use case of the app is a `Command` (changes state) or a `Query`
-(reads state, never changes it). The viewmodel calls it; `ArqMcpServer`
-exposes the same object to agents as a tool. Done when the use case has a
-freezed input with a generated schema, a JSON-encodable output and error,
-and a unit test.
-
-## Input, output, error
-
-```dart
-@freezed
-abstract class AddNoteInput with _$AddNoteInput {
-  @JsonSerializable(createJsonSchema: true)
-  const factory AddNoteInput({required String text}) = _AddNoteInput;
-
-  factory AddNoteInput.fromJson(Map<String, dynamic> json) => _$AddNoteInputFromJson(json);
-
-  static const schema = _$_AddNoteInputJsonSchema;
-}
-```
-
-- The input is `@freezed` with `@JsonSerializable(createJsonSchema: true)` on
-  its factory. The generated schema is named after the private class:
-  `_$_<Input>JsonSchema`.
-- Outputs and errors are `@freezed` with `fromJson`, or JSON primitives. The
-  server encodes them with `jsonEncode`.
-- Codecs and schemas come from codegen only: run `build_runner` after every
-  change to an input or output.
-- The package's `analysis_options.yaml` sets
-  `errors: invalid_annotation_target: ignore` and excludes `**/*.g.dart` and
-  `**/*.freezed.dart`.
+A use case is a `Command` (changes state) or a `Query` (reads state, never
+changes it), from `arq`. Both are interfaces with one `call` and know
+nothing about MCP. The viewmodel calls them; an `McpTool` from `arq_ai`
+puts one in front of agents. Done when the use case has a unit test and, if
+agents need it, a tool.
 
 ## Command
 
 ```dart
-class AddNoteCommand extends Command<AddNoteInput, Note, NoteError> {
-  AddNoteCommand(this._notes)
-    : super(
-        name: 'add_note',
-        description: 'Adds a note with the given text.',
-        inputSchema: AddNoteInput.schema,
-        decodeInput: AddNoteInput.fromJson,
-      );
+class AddNoteCommand implements AppCommand<AddNoteInput, NoteId, NoteError> {
+  AddNoteCommand(this._notes);
 
   final NoteRepository _notes;
 
   @override
-  Future<Result<NoteError, Note>> call(AddNoteInput input) => _notes.add(input.text);
+  Future<AppOutcome<NoteError, NoteId>> call(AddNoteInput input) => _notes.add(input.text);
 }
 ```
+
+A command returns the result of its own write (`Unit`, the generated id, or
+the server's answer about that write), never a projection of the aggregate.
 
 ## Query
 
 ```dart
-class NotesQuery extends Query<NotesInput, NoteList, NoteError> {
-  NotesQuery(this._notes)
-    : super(name: 'notes', description: 'Lists notes.', inputSchema: NotesInput.schema, decodeInput: NotesInput.fromJson);
+class NotesQuery implements AppQuery<NotesInput, NoteList, NoteError> {
+  NotesQuery(this._notes);
 
   final NoteRepository _notes;
 
   @override
-  ValueListenable<Async<Result<NoteError, NoteList>>> call(NotesInput input) => _notes.watch(input.filter);
+  ValueListenable<Async<AppOutcome<NoteError, NoteList>>> call(NotesInput input) => _notes.watch(input.filter);
 }
 ```
 
-`once(input)` reads a query a single time; agents always get this form.
+`query.once(input)` reads it a single time.
 
-## Rules
+## Outcome
 
-- `name` is `snake_case` English after the use case; `description` tells an
-  agent when to call it.
-- One use case per class, one `call`, no state of its own. It orchestrates
-  the app's repositories.
-- A query never changes state; the server marks it read-only.
-- Register every use case in the app's `ArqMcpServer(channel, useCases: [...])`.
+Every use case ends in an `Outcome<R, E, T>`: `Done(value)`,
+`Failed(error)` with a domain error, or `Blocked(reason)` when the app
+cannot run it now. The app fixes `R` once:
+
+```dart
+typedef AppOutcome<E, T> = Outcome<AppUnavailable, E, T>;
+typedef AppCommand<I, O, E> = Command<I, O, E, AppUnavailable>;
+typedef AppQuery<I, O, E> = Query<I, O, E, AppUnavailable>;
+```
+
+## MCP tools
+
+The module's tools live in one file, `mcp/<module>_tools.dart`:
+
+```dart
+List<McpTool> notesTools(Ref ref) => [
+  McpTool.command(
+    ref.watch(addNoteCommandProvider),
+    name: 'add_note',
+    description: 'Adds a note with the given text.',
+    inputSchema: AddNoteInput.schema,
+    decodeInput: AddNoteInput.fromJson,
+  ),
+];
+```
+
+- The input is `@freezed` with `@JsonSerializable(createJsonSchema: true)` on
+  its factory; the schema is `_$_<Input>JsonSchema`. Run `build_runner` after
+  every change.
+- Outputs, errors and reasons encode with `jsonEncode` (freezed `toJson`).
+- `name` is `snake_case` English; `description` tells an agent when to call it.
+- Replies: `Done` → the value; `Failed` → `{"error": e}`; `Blocked` →
+  `{"unavailable": {"code", "payload"}}`; bad input → a tool error.
+- Pass every tool to `ArqMcpServer(channel, tools: [...])`.

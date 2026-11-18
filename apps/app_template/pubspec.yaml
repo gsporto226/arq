@@ -11,6 +11,7 @@ dependencies:
   arq: ^0.1.0
   arq_ai: ^0.1.0
   arq_offline: ^0.1.0
+  arq_widgets: ^0.1.0
   flutter:
     sdk: flutter
   flutter_localizations:

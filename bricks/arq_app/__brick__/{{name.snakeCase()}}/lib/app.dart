@@ -1,4 +1,4 @@
-import 'package:{{name.snakeCase()}}/features/greeting/_presentation/home/home_page.dart';
+import 'package:{{name.snakeCase()}}/modules/greeting/presentation/home/home_page.dart';
 import 'package:{{name.snakeCase()}}/l10n/app_localizations.dart';
 import 'package:{{name.snakeCase()}}/links.dart';
 import 'package:material_ui/material_ui.dart';
